@@ -1,24 +1,23 @@
+# https://twitter.com/whitphx
+# https://www.whitphx.info/posts/20211231-streamlit-webrtc-video-app-tutorial/
+
 import streamlit as st
+from streamlit_webrtc import webrtc_streamer
+import cv2
+import av #strealing video library
 
-# Streamlitアプリの設定
-st.title("シンプルな計算アプリ")
-st.write("以下のフォームに数字を入力してください。")
+st.title('Streamlit App Test')
+st.write('Gray Scale')
 
-# ユーザー入力を受け取る
-number1 = st.number_input("最初の数字を入力してください：", value=0)
-number2 = st.number_input("次の数字を入力してください：", value=0)
+#Class
+class VideoProcessor:
+    def recv(self,frame):
 
-# 計算
-result_add = number1 + number2
-result_subtract = number1 - number2
-result_multiply = number1 * number2
-result_divide = None if number2 == 0 else number1 / number2
+        img = frame.to_ndarray(format = 'bgr24')
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        img = av.VideoFrame.from_ndarray(img, format='gray')
 
-# 結果を表示
-st.write(f"足し算の結果: {result_add}")
-st.write(f"引き算の結果: {result_subtract}")
-st.write(f"掛け算の結果: {result_multiply}")
-if result_divide is None:
-    st.write("割り算は0では計算できません。")
-else:
-    st.write(f"割り算の結果: {result_divide}")
+        return img
+
+webrtc_streamer(key='example', video_processor_factory=VideoProcessor)
+

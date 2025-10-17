@@ -1,0 +1,4 @@
+streamlit>=1.36.0
+streamlit-webrtc>=0.47.7
+opencv-python-headless>=4.9.0.80
+av>=11.0.0
